@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_checkin_search">
+            <field name="name">gym.checkin.search</field>
+            <field name="model">gym.checkin</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm check-in">
+                    <field name="member_id"/>
+                    <field name="checkin_time"/>
+                    <filter string="Đang tập" domain="[('checkout_time','=',False)]"/>
+                    <filter string="Đã check-out" domain="[('checkout_time','!=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_checkin_tree">
+            <field name="name">gym.checkin.tree</field>
+            <field name="model">gym.checkin</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Danh sách điểm danh">
+                    <field name="member_id"/>
+                    <field name="checkin_time"/>
+                    <field name="checkout_time"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_checkin_form">
+            <field name="name">gym.checkin.form</field>
+            <field name="model">gym.checkin</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Thông tin check-in" version="7.0">
+                    <header>
+                        <button name="action_checkout" string="Check-out" type="object" class="oe_highlight" attrs="{'invisible':[('checkout_time','!=',False)]}"/>
+                    </header>
+                    <sheet>
+                        <group string="Thông tin điểm danh" colspan="4">
+                            <field name="member_id"/>
+                            <field name="checkin_time" readonly="1"/>
+                            <field name="checkout_time" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_checkin">
+            <field name="name">Check-in hôm nay</field>
+            <field name="res_model">gym.checkin</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_checkin_search"/>
+            <field name="domain">[('checkout_time','=',False)]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_attendance_history">
+            <field name="name">Lịch sử điểm danh</field>
+            <field name="res_model">gym.checkin</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_checkin_search"/>
+        </record>
+    </data>
+</openerp>

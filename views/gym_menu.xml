@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		<!-- Main menu -->
+        <menuitem id="gym_parent" name="Gym Management" icon="STOCK_OPEN"/>
+		<!-- Thành viên -->
+        <menuitem id="menu_gym_member_parent" name="Thành viên" parent="gym_parent" sequence="10"/>
+        
+        <menuitem action="action_member" name="Thông tin thành viên" id="menu_gym_member" parent="menu_gym_member_parent" sequence="1"/>
+        
+        <menuitem action="action_membership" name="Đăng ký gói tập" id="menu_gym_membership" parent="menu_gym_member_parent" sequence="2"/>
+		
+		<!-- Gói tập -->
+        <menuitem id="menu_gym_package_parent" name="Gói tập" parent="gym_parent" sequence="20"/>
+        
+        <menuitem action="action_package" name="Danh sách gói tập" id="menu_gym_package" parent="menu_gym_package_parent" sequence="1"/>
+
+		<!-- Huấn luyện viên -->
+        <menuitem id="menu_gym_trainer_parent" name="Huấn luyện viên" parent="gym_parent" sequence="30"/>
+        
+        <menuitem action="action_trainer" name="Thông tin huấn luyện viên" id="menu_gym_trainer" parent="menu_gym_trainer_parent" sequence="1"/>
+
+		<!-- Lịch sử tập luyện -->
+        <menuitem id="menu_gym_history_parent" name="Lịch sử tập luyện" parent="gym_parent" sequence="40"/>
+        
+        <menuitem action="action_checkin" name="Check-in" id="menu_gym_checkin" parent="menu_gym_history_parent" sequence="1"/>
+        
+        <menuitem action="action_attendance_history" name="Lịch sử điểm danh" id="menu_gym_attendance_history" parent="menu_gym_history_parent" sequence="3"/>
+        
+    </data>
+</openerp>

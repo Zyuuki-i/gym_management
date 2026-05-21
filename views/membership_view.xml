@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_membership_search">
+            <field name="name">membership.search</field>
+            <field name="model">gym.membership</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm gói tập">
+                    <field name="member_id"/>
+                    <field name="package_id"/>
+                    <field name="trainer_id"/>
+                    <field name="status"/>
+                    <field name="payment_status"/>
+                    <filter string="Đang hoạt động" domain="[('status','=','active')]"/>
+                    <filter string="Hết hạn" domain="[('status','=','expired')]"/>
+                    <filter string="Chưa thanh toán" domain="[('payment_status','=','unpaid')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_membership_tree">
+            <field name="name">membership.tree</field>
+            <field name="model">gym.membership</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Danh sách gói tập">
+                    <field name="member_id"/>
+                    <field name="package_id"/>
+                    <field name="trainer_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="total_amount"/>
+                    <field name="status"/>
+                    <field name="payment_status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_membership_form">
+            <field name="name">membership.form</field>
+            <field name="model">gym.membership</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Thông tin gói tập" version="7.0" id="view_membership_form_arch">
+                    <sheet>
+                        <group col="4">
+                            <group string="Thông tin cơ bản" col="2">
+                                <field name="member_id"/>
+                                <field name="package_id" on_change="onchange_package_id(package_id)"/>
+                                <field name="trainer_id"/>
+                            </group>
+                            <group string="Thời hạn" col="2">
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                            </group>
+                        </group>
+
+                        <group col="4">
+                            <group string="Thanh toán" col="2">
+                                <field name="total_amount"/>
+                                <field name="payment_status"/>
+                            </group>
+                            <group string="Trạng thái" col="2">
+                                <field name="status"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_membership">
+            <field name="name">Danh sách gói tập</field>
+            <field name="res_model">gym.membership</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_membership_search"/>
+        </record>
+
+    </data>
+</openerp>

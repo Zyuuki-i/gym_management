@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record model="gym.member" id="member_demo_1">
+            <field name="name">Văn Đạt</field>
+            <field name="phone">0869347040</field>
+            <field name="email">levandat@gmail.com</field>
+            <field name="gender">male</field>
+            <field name="address">TP. Hồ Chí Minh</field>
+            <field name="join_date">2026-05-01</field>
+            <field name="state">accepted</field>
+        </record>
+
+        <record model="gym.member" id="member_demo_2">
+            <field name="name">Hoàng Duy</field>
+            <field name="phone">0834789013</field>
+            <field name="email">hoangduy@gmail.com</field>
+            <field name="gender">male</field>
+            <field name="address">TP. Hồ Chí Minh</field>
+            <field name="join_date">2026-05-17</field>
+            <field name="state">blocked</field>
+        </record>
+
+        <record model="gym.member" id="member_demo_3">
+            <field name="name">Trần Thảo Vy</field>
+            <field name="phone">0908123456</field>
+            <field name="email">thaovy@gmail.com</field>
+            <field name="gender">female</field>
+            <field name="address">Đồng Nai</field>
+            <field name="join_date">2026-05-20</field>
+            <field name="state">accepted</field>
+        </record>
+
+        <record model="gym.trainer" id="trainer_demo_1">
+            <field name="trainer_id">T001</field>
+            <field name="name">Nguyễn Minh Tuấn</field>
+            <field name="phone">0912345678</field>
+            <field name="email">minhtuan@gym.vn</field>
+            <field name="specialty">Bodybuilding</field>
+            <field name="hire_date">2025-09-01</field>
+            <field name="active">True</field>
+        </record>
+
+        <record model="gym.trainer" id="trainer_demo_2">
+            <field name="trainer_id">T002</field>
+            <field name="name">Lê Thị Lan</field>
+            <field name="phone">0987654321</field>
+            <field name="email">thilan@gym.vn</field>
+            <field name="specialty">Yoga &amp; Pilates</field>
+            <field name="hire_date">2025-12-15</field>
+            <field name="active">True</field>
+        </record>
+
+        <record model="gym.package" id="package_demo_1">
+            <field name="package_id">P001</field>
+            <field name="name">Gói tập cơ bản 1 tháng</field>
+            <field name="price">800000.0</field>
+            <field name="duration_days">30</field>
+            <field name="description">Gói tập cơ bản cho người mới bắt đầu, 1 tháng sử dụng đầy đủ phòng tập.</field>
+            <field name="active">True</field>
+        </record>
+
+        <record model="gym.package" id="package_demo_2">
+            <field name="package_id">P002</field>
+            <field name="name">Gói tập Premium 2 tháng</field>
+            <field name="price">1800000.0</field>
+            <field name="duration_days">60</field>
+            <field name="description">Gói tập cao cấp, bao gồm huấn luyện viên cá nhân và hỗ trợ dinh dưỡng.</field>
+            <field name="active">True</field>
+        </record>
+
+        <record model="gym.package" id="package_demo_3">
+            <field name="package_id">P003</field>
+            <field name="name">Gói tập Yoga 1 tháng</field>
+            <field name="price">1200000.0</field>
+            <field name="duration_days">30</field>
+            <field name="description">Gói Yoga chuyên sâu, phù hợp cho phục hồi và giảm stress.</field>
+            <field name="active">True</field>
+        </record>
+
+        <record model="gym.membership" id="membership_demo_1">
+            <field name="member_id" ref="member_demo_1"/>
+            <field name="package_id" ref="package_demo_1"/>
+            <field name="trainer_id" ref="trainer_demo_1"/>
+            <field name="start_date">2026-05-01</field>
+            <field name="end_date">2026-05-31</field>
+            <field name="total_amount">800000.0</field>
+            <field name="payment_status">paid</field>
+            <field name="status">active</field>
+        </record>
+
+        <record model="gym.membership" id="membership_demo_2">
+            <field name="member_id" ref="member_demo_3"/>
+            <field name="package_id" ref="package_demo_2"/>
+            <field name="trainer_id" ref="trainer_demo_2"/>
+            <field name="start_date">2026-05-20</field>
+            <field name="end_date">2026-07-19</field>
+            <field name="total_amount">1800000.0</field>
+            <field name="payment_status">unpaid</field>
+            <field name="status">active</field>
+        </record>
+
+        <record model="gym.membership" id="membership_demo_3">
+            <field name="member_id" ref="member_demo_2"/>
+            <field name="package_id" ref="package_demo_1"/>
+            <field name="trainer_id" ref="trainer_demo_1"/>
+            <field name="start_date">2026-04-01</field>
+            <field name="end_date">2026-04-30</field>
+            <field name="total_amount">800000.0</field>
+            <field name="payment_status">paid</field>
+            <field name="status">expired</field>
+        </record>
+
+        <record model="gym.membership" id="membership_demo_4">
+            <field name="member_id" ref="member_demo_3"/>
+            <field name="package_id" ref="package_demo_3"/>
+            <field name="trainer_id" ref="trainer_demo_2"/>
+            <field name="start_date">2026-03-05</field>
+            <field name="end_date">2026-04-04</field>
+            <field name="total_amount">1200000.0</field>
+            <field name="payment_status">paid</field>
+            <field name="status">expired</field>
+        </record>
+
+        <record model="gym.checkin" id="checkin_demo_1">
+            <field name="member_id" ref="member_demo_1"/>
+            <field name="checkin_time">2026-05-20 08:15:00</field>
+            <field name="checkout_time">2026-05-20 09:30:00</field>
+        </record>
+
+        <record model="gym.checkin" id="checkin_demo_2">
+            <field name="member_id" ref="member_demo_1"/>
+            <field name="checkin_time">2026-05-21 18:00:00</field>
+            <field name="checkout_time">2026-05-21 19:10:00</field>
+        </record>
+
+        <record model="gym.checkin" id="checkin_demo_3">
+            <field name="member_id" ref="member_demo_3"/>
+            <field name="checkin_time">2026-05-21 10:00:00</field>
+            <field name="checkout_time">2026-05-21 11:05:00</field>
+        </record>
+    </data>
+</openerp>

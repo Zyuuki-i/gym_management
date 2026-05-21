@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- SEARCH VIEW -->
+        <record model="ir.ui.view" id="view_member_search">
+            <field name="name">member.search</field>
+            <field name="model">gym.member</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm thành viên">
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="gender"/>
+                    <field name="state"/>
+                    <filter string="Đang hoạt động"
+                            domain="[('state','=','accepted')]"/>
+                    <filter string="Đã khóa"
+                            domain="[('state','=','blocked')]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- TREE VIEW -->
+        <record model="ir.ui.view" id="view_member_tree">
+            <field name="name">member.tree</field>
+            <field name="model">gym.member</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Danh sách thành viên">
+                    <field name="name"/>
+                    <field name="gender"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+					<field name="address"/>
+                    <field name="join_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- FORM VIEW -->
+        <record model="ir.ui.view" id="view_member_form">
+            <field name="name">member.form</field>
+            <field name="model">gym.member</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Thông tin thành viên" version="7.0">
+                    <sheet>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button name="action_view_memberships" 
+                                    type="object" 
+                                    string="Xem gói tập" 
+                                    icon="fa-bars" 
+                                    class="oe_stat_button"/>
+                        </div>
+
+                        <group string="Thông tin cơ bản" colspan="4">
+                            <field name="name"/>
+                            <field name="gender" widget="radio"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="address"/>
+                            <field name="join_date"/>
+                            <field name="state"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- ACTION -->
+        <record model="ir.actions.act_window" id="action_member">
+            <field name="name">Danh sách thành viên</field>
+            <field name="res_model">gym.member</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_member_search"/>
+        </record>
+
+    </data>
+</openerp>

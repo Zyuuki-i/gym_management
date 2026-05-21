@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- SEARCH VIEW -->
+        <record model="ir.ui.view" id="view_trainer_search">
+            <field name="name">trainer.search</field>
+            <field name="model">gym.trainer</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm huấn luyện viên">
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="specialty"/>
+                    <filter string="Hoạt động"
+                            domain="[('active','=',True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- TREE VIEW -->
+        <record model="ir.ui.view" id="view_trainer_tree">
+            <field name="name">trainer.tree</field>
+            <field name="model">gym.trainer</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Danh sách huấn luyện viên">
+                    <field name="trainer_id"/>
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="specialty"/>
+                    <field name="hire_date"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- FORM VIEW -->
+        <record model="ir.ui.view" id="view_trainer_form">
+            <field name="name">trainer.form</field>
+            <field name="model">gym.trainer</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Thông tin huấn luyện viên" version="7.0">
+                    <sheet>
+                        <group string="Thông tin cơ bản" colspan="4">
+                            <field name="trainer_id"/>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="specialty"/>
+                            <field name="hire_date"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ACTION -->
+        <record model="ir.actions.act_window" id="action_trainer">
+            <field name="name">Danh sách huấn luyện viên</field>
+            <field name="res_model">gym.trainer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_trainer_search"/>
+        </record>
+
+    </data>
+</openerp>

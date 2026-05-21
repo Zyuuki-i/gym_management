@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- SEARCH VIEW -->
+        <record model="ir.ui.view" id="view_package_search">
+            <field name="name">package.search</field>
+            <field name="model">gym.package</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm gói tập">
+                    <field name="name"/>
+                    <field name="package_id"/>
+                    <filter string="Hoạt động"
+                            domain="[('active','=',True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- TREE VIEW -->
+        <record model="ir.ui.view" id="view_package_tree">
+            <field name="name">package.tree</field>
+            <field name="model">gym.package</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Danh sách gói tập">
+                    <field name="package_id"/>
+                    <field name="name"/>
+                    <field name="price"/>
+                    <field name="duration_days"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- FORM VIEW -->
+        <record model="ir.ui.view" id="view_package_form">
+            <field name="name">package.form</field>
+            <field name="model">gym.package</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Thông tin gói tập" version="7.0">
+                    <sheet>
+                        <group string="Thông tin cơ bản" colspan="4">
+                            <field name="package_id"/>
+                            <field name="name"/>
+                            <field name="price"/>
+                            <field name="duration_days"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Mô tả" colspan="4">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ACTION -->
+        <record model="ir.actions.act_window" id="action_package">
+            <field name="name">Danh sách gói tập</field>
+            <field name="res_model">gym.package</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_package_search"/>
+        </record>
+
+    </data>
+</openerp>
