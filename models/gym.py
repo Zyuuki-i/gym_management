@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import datetime
 from openerp.osv import fields, osv
 from openerp.osv.orm import except_orm
-import datetime
-
 
 class gym_member(osv.osv):
     _name = 'gym.member'
@@ -15,11 +14,7 @@ class gym_member(osv.osv):
         'address': fields.char('Địa chỉ', size=255),
         'join_date': fields.date('Ngày tham gia'),
         'state': fields.selection([('accepted', 'Cho phép'), ('blocked', 'Khóa')], 'Trạng thái', required=True),
-        'membership_ids': fields.one2many(
-            'gym.membership',
-            'member_id',
-            'Memberships'
-        ),
+        'membership_ids': fields.one2many('gym.membership', 'member_id', 'Memberships'),
     }
 
     _defaults = {
@@ -54,41 +49,20 @@ class gym_member(osv.osv):
             'context': {'default_member_id': member_id},
         }
 
-
 gym_member()
-
 
 class gym_membership(osv.osv):
     _name = 'gym.membership'
-
     _columns = {
-        'member_id': fields.many2one(
-            'gym.member',
-            'Member',
-            required=True
-        ),
-        'package_id': fields.many2one(
-            'gym.package',
-            'Package',
-            required=True
-        ),
-        'trainer_id': fields.many2one(
-            'gym.trainer',
-            'Trainer'
-        ),
+        'member_id': fields.many2one('gym.member', 'Member', required=True),
+        'package_id': fields.many2one('gym.package', 'Package', required=True),
+        'trainer_id': fields.many2one('gym.trainer', 'Trainer'),
         'start_date': fields.date('Ngày bắt đầu'),
         'end_date': fields.date('Ngày kết thúc'),
         'total_amount': fields.float('Tổng tiền'),
-        'payment_status': fields.selection([
-            ('unpaid', 'Chưa thanh toán'),
-            ('paid', 'Đã thanh toán')
-        ], 'Thanh toán', required=True),
-        'status': fields.selection([
-            ('active', 'Kích hoạt'),
-            ('expired', 'Hết hạn'),
-            ('canceled', 'Đã hủy')
-        ], 'Trạng thái', required=True),
-    }   
+        'payment_status': fields.selection([('unpaid', 'Chưa thanh toán'), ('paid', 'Đã thanh toán')], 'Thanh toán', required=True),
+        'status': fields.selection([('active', 'Kích hoạt'), ('expired', 'Hết hạn'), ('canceled', 'Đã hủy')], 'Trạng thái', required=True),
+    }
 
     _defaults = {
         'start_date': fields.date.context_today,
@@ -111,13 +85,21 @@ class gym_membership(osv.osv):
             })
         return result
 
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('member_id'):
+            member = self.pool.get('gym.member').browse(cr, uid, vals['member_id'], context=context)
+            if member.state == 'blocked':
+                raise except_orm(u'Lỗi đăng ký gói!', u'Thành viên đang bị khóa, không thể đăng ký gói tập.')
+        if vals.get('trainer_id'):
+            trainer = self.pool.get('gym.trainer').browse(cr, uid, vals['trainer_id'], context=context)
+            if not trainer.active:
+                raise except_orm(u'Lỗi đăng ký gói!', u'Huấn luyện viên đã nghỉ hưu hoặc không còn hoạt động, vui lòng chọn huấn luyện viên khác.')
+        return super(gym_membership, self).create(cr, uid, vals, context=context)
 
 gym_membership()
 
-
 class gym_trainer(osv.osv):
     _name = 'gym.trainer'
-
     _columns = {
         'trainer_id': fields.char('Mã huấn luyện viên', size=20, required=True),
         'name': fields.char('Tên huấn luyện viên', size=64, required=True),
@@ -126,35 +108,25 @@ class gym_trainer(osv.osv):
         'specialty': fields.char('Chuyên môn', size=64),
         'hire_date': fields.date('Ngày bắt đầu'),
         'active': fields.boolean('Hoạt động'),
-        'membership_ids': fields.one2many(
-            'gym.membership',
-            'trainer_id',
-            'Memberships'
-        ),
+        'membership_ids': fields.one2many('gym.membership', 'trainer_id', 'Memberships'),
     }
 
     _defaults = {
+        'hire_date': fields.date.context_today,
         'active': True,
     }
 
-
 gym_trainer()
-
 
 class gym_package(osv.osv):
     _name = 'gym.package'
-
     _columns = {
         'package_id': fields.char('Mã gói tập', size=20, required=True),
         'name': fields.char('Tên gói tập', required=True),
-        'price': fields.float('Giá', digits=(16,2)),
+        'price': fields.float('Giá', digits=(16, 2)),
         'duration_days': fields.integer('Số ngày'),
         'description': fields.text('Mô tả'),
-        'membership_ids': fields.one2many(
-            'gym.membership',
-            'package_id',
-            'Memberships'
-        ),
+        'membership_ids': fields.one2many('gym.membership', 'package_id', 'Memberships'),
         'active': fields.boolean('Hoạt động'),
     }
 
@@ -166,18 +138,12 @@ class gym_package(osv.osv):
         ('package_id_unique', 'unique(package_id)', 'Mã gói tập đã tồn tại!')
     ]
 
-
 gym_package()
-
 
 class gym_checkin(osv.osv):
     _name = 'gym.checkin'
-
     _columns = {
-        'member_id': fields.many2one(
-            'gym.member',
-            'Member'
-        ),
+        'member_id': fields.many2one('gym.member', 'Member'),
         'checkin_time': fields.datetime('Thời gian vào'),
         'checkout_time': fields.datetime('Thời gian ra'),
     }
@@ -187,49 +153,21 @@ class gym_checkin(osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
-
         member_obj = self.pool.get('gym.member')
         membership_obj = self.pool.get('gym.membership')
-
         member_id = vals.get('member_id')
 
-        # =================================================
-        # KIỂM TRA MEMBER
-        # =================================================
-
         if not member_id:
-            raise except_orm(
-                u'Lỗi!',
-                u'Vui lòng chọn thành viên!'
-            )
+            raise except_orm(u'Lỗi!', u'Vui lòng chọn thành viên!')
 
-        member_ids = member_obj.search(cr, uid, [
-            ('id', '=', member_id)
-        ])
-
+        member_ids = member_obj.search(cr, uid, [('id', '=', member_id)])
         if not member_ids:
-            raise except_orm(
-                u'Lỗi!',
-                u'Thành viên không tồn tại!'
-            )
+            raise except_orm(u'Lỗi!', u'Thành viên không tồn tại!')
 
-        member = member_obj.browse(
-            cr, uid,
-            member_id,
-            context=context
-        )
-
-        # =================================================
-        # MEMBER BỊ KHÓA
-        # =================================================
-
+        member = member_obj.browse(cr, uid, member_id, context=context)
         if member.state == 'blocked':
-            raise except_orm(
-                u'Từ chối check-in!',
-                u'Thành viên đang bị khóa!'
-            )
-        
-        # Kiểm tra gói tập: Phải thỏa mãn nằm trong khoảng [start_date <= Today <= end_date]
+            raise except_orm(u'Từ chối check-in!', u'Thành viên đang bị khóa!')
+
         today = datetime.date.today().strftime('%Y-%m-%d')
         membership_ids = membership_obj.search(cr, uid, [
             ('member_id', '=', member_id),
@@ -238,15 +176,8 @@ class gym_checkin(osv.osv):
             ('start_date', '<=', today),
             ('end_date', '>=', today)
         ])
-
         if not membership_ids:
             raise except_orm(u'Từ chối check-in!', u'Không có gói tập hợp lệ, chưa đến ngày tập hoặc đã hết hạn!')
-       
-        # =================================================
-        # KIỂM TRA MEMBERSHIP HỢP LỆ
-        # =================================================
-
-        today = datetime.date.today().strftime('%Y-%m-%d')
 
         membership_ids = membership_obj.search(cr, uid, [
             ('member_id', '=', member_id),
@@ -254,72 +185,33 @@ class gym_checkin(osv.osv):
             ('payment_status', '=', 'paid'),
             ('end_date', '>=', today)
         ])
-
         if not membership_ids:
-            raise except_orm(
-                u'Từ chối check-in!',
-                u'Không có gói tập hợp lệ hoặc đã hết hạn!'
-            )
+            raise except_orm(u'Từ chối check-in!', u'Không có gói tập hợp lệ hoặc đã hết hạn!')
 
-        membership = membership_obj.browse(
-            cr, uid,
-            membership_ids[0],
-            context=context
-        )
-
-        # =================================================
-        # KIỂM TRA PACKAGE
-        # =================================================
-
+        membership = membership_obj.browse(cr, uid, membership_ids[0], context=context)
         if not membership.package_id:
-            raise except_orm(
-                u'Lỗi dữ liệu!',
-                u'Membership chưa có gói tập!'
-            )
+            raise except_orm(u'Lỗi dữ liệu!', u'Membership chưa có gói tập!')
 
         if not membership.package_id.active:
-            raise except_orm(
-                u'Từ chối check-in!',
-                u'Gói tập hiện đang ngừng hoạt động!'
-            )
-
-        # =================================================
-        # KIỂM TRA CHECK-IN TRÙNG
-        # =================================================
+            raise except_orm(u'Từ chối check-in!', u'Gói tập hiện đang ngừng hoạt động!')
 
         duplicate_ids = self.search(cr, uid, [
             ('member_id', '=', member_id),
             ('checkout_time', '=', False)
         ])
-
         if duplicate_ids:
-            raise except_orm(
-                u'Từ chối check-in!',
-                u'Thành viên đang ở trong phòng tập!'
-            )
-
-        # =================================================
-        # AUTO CHECK-IN TIME
-        # =================================================
+            raise except_orm(u'Từ chối check-in!', u'Thành viên đang ở trong phòng tập!')
 
         if not vals.get('checkin_time'):
             vals['checkin_time'] = fields.datetime.now()
 
-        # =================================================
-        # CREATE
-        # =================================================
-
-        return super(gym_checkin, self).create(
-            cr, uid, vals, context=context
-        )
+        return super(gym_checkin, self).create(cr, uid, vals, context=context)
 
     def action_checkout(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
             'checkout_time': fields.datetime.now(),
             'status': 'checked_out'
         })
-
         return True
-
 
 gym_checkin()
