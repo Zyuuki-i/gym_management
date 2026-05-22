@@ -10,7 +10,6 @@
             <field name="arch" type="xml">
                 <search string="Tìm kiếm gói tập">
                     <field name="name"/>
-                    <field name="package_id"/>
                     <filter string="Hoạt động"
                             domain="[('active','=',True)]"/>
                 </search>
@@ -24,7 +23,6 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Danh sách gói tập">
-                    <field name="package_id"/>
                     <field name="name"/>
                     <field name="price"/>
                     <field name="duration_days"/>
@@ -42,7 +40,6 @@
                 <form string="Thông tin gói tập" version="7.0">
                     <sheet>
                         <group string="Thông tin cơ bản" colspan="4">
-                            <field name="package_id"/>
                             <field name="name"/>
                             <field name="price"/>
                             <field name="duration_days"/>

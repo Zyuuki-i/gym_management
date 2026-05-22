@@ -32,7 +32,6 @@
         </record>
 
         <record model="gym.trainer" id="trainer_demo_1">
-            <field name="trainer_id">T001</field>
             <field name="name">Nguyễn Minh Tuấn</field>
             <field name="phone">0912345678</field>
             <field name="email">minhtuan@gym.vn</field>
@@ -42,7 +41,6 @@
         </record>
 
         <record model="gym.trainer" id="trainer_demo_2">
-            <field name="trainer_id">T002</field>
             <field name="name">Lê Thị Lan</field>
             <field name="phone">0987654321</field>
             <field name="email">thilan@gym.vn</field>
@@ -52,7 +50,6 @@
         </record>
 
         <record model="gym.package" id="package_demo_1">
-            <field name="package_id">P001</field>
             <field name="name">Gói tập cơ bản 1 tháng</field>
             <field name="price">800000.0</field>
             <field name="duration_days">30</field>
@@ -61,7 +58,6 @@
         </record>
 
         <record model="gym.package" id="package_demo_2">
-            <field name="package_id">P002</field>
             <field name="name">Gói tập Premium 2 tháng</field>
             <field name="price">1800000.0</field>
             <field name="duration_days">60</field>
@@ -70,7 +66,6 @@
         </record>
 
         <record model="gym.package" id="package_demo_3">
-            <field name="package_id">P003</field>
             <field name="name">Gói tập Yoga 1 tháng</field>
             <field name="price">1200000.0</field>
             <field name="duration_days">30</field>

@@ -54,12 +54,12 @@ gym_member()
 class gym_membership(osv.osv):
     _name = 'gym.membership'
     _columns = {
-        'member_id': fields.many2one('gym.member', 'Member', required=True),
-        'package_id': fields.many2one('gym.package', 'Package', required=True),
-        'trainer_id': fields.many2one('gym.trainer', 'Trainer'),
+        'member_id': fields.many2one('gym.member', 'Thành viên', required=True),
+        'package_id': fields.many2one('gym.package', 'Gói tập', required=True),
+        'trainer_id': fields.many2one('gym.trainer', 'Huấn luyện viên'),
         'start_date': fields.date('Ngày bắt đầu'),
         'end_date': fields.date('Ngày kết thúc'),
-        'total_amount': fields.float('Tổng tiền'),
+        'total_amount': fields.float('Tổng tiền', digits=(16, 2)),
         'payment_status': fields.selection([('unpaid', 'Chưa thanh toán'), ('paid', 'Đã thanh toán')], 'Thanh toán', required=True),
         'status': fields.selection([('active', 'Kích hoạt'), ('expired', 'Hết hạn'), ('canceled', 'Đã hủy')], 'Trạng thái', required=True),
     }
@@ -101,7 +101,6 @@ gym_membership()
 class gym_trainer(osv.osv):
     _name = 'gym.trainer'
     _columns = {
-        'trainer_id': fields.char('Mã huấn luyện viên', size=20, required=True),
         'name': fields.char('Tên huấn luyện viên', size=64, required=True),
         'phone': fields.char('Số điện thoại', size=20),
         'email': fields.char('Email', size=100),
@@ -121,7 +120,6 @@ gym_trainer()
 class gym_package(osv.osv):
     _name = 'gym.package'
     _columns = {
-        'package_id': fields.char('Mã gói tập', size=20, required=True),
         'name': fields.char('Tên gói tập', required=True),
         'price': fields.float('Giá', digits=(16, 2)),
         'duration_days': fields.integer('Số ngày'),
@@ -143,7 +141,7 @@ gym_package()
 class gym_checkin(osv.osv):
     _name = 'gym.checkin'
     _columns = {
-        'member_id': fields.many2one('gym.member', 'Member'),
+        'member_id': fields.many2one('gym.member', 'Thành viên', required=True),
         'checkin_time': fields.datetime('Thời gian vào'),
         'checkout_time': fields.datetime('Thời gian ra'),
     }

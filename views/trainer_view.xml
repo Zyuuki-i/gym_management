@@ -26,7 +26,6 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Danh sách huấn luyện viên">
-                    <field name="trainer_id"/>
                     <field name="name"/>
                     <field name="phone"/>
                     <field name="email"/>
@@ -46,7 +45,6 @@
                 <form string="Thông tin huấn luyện viên" version="7.0">
                     <sheet>
                         <group string="Thông tin cơ bản" colspan="4">
-                            <field name="trainer_id"/>
                             <field name="name"/>
                             <field name="phone"/>
                             <field name="email"/>
