@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
         <record model="gym.member" id="member_demo_1">
-            <field name="name">Văn Đạt</field>
+            <field name="name">Lê Văn Đạt</field>
             <field name="phone">0869347040</field>
             <field name="email">levandat@gmail.com</field>
             <field name="gender">male</field>
@@ -18,7 +18,7 @@
             <field name="gender">male</field>
             <field name="address">TP. Hồ Chí Minh</field>
             <field name="join_date">2026-05-17</field>
-            <field name="state">blocked</field>
+            <field name="state">accepted</field> 
         </record>
 
         <record model="gym.member" id="member_demo_3">
