@@ -15,6 +15,7 @@
     ],
 
     "update_xml": [
+        "data/cron.xml",
         "views/member_view.xml",
         "views/membership_view.xml",
         "views/package_view.xml",

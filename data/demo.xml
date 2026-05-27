@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
+        
         <record model="gym.member" id="member_demo_1">
             <field name="name">Lê Văn Đạt</field>
             <field name="phone">0869347040</field>
@@ -28,7 +29,7 @@
             <field name="gender">female</field>
             <field name="address">Đồng Nai</field>
             <field name="join_date">2026-05-20</field>
-            <field name="state">accepted</field>
+            <field name="state">blocked</field>
         </record>
 
         <record model="gym.trainer" id="trainer_demo_1">
@@ -44,7 +45,7 @@
             <field name="name">Lê Thị Lan</field>
             <field name="phone">0987654321</field>
             <field name="email">thilan@gym.vn</field>
-            <field name="specialty">Yoga &amp; Pilates</field>
+            <field name="specialty">Yoga và Pilates</field>
             <field name="hire_date">2025-12-15</field>
             <field name="active">True</field>
         </record>
@@ -73,48 +74,42 @@
             <field name="active">True</field>
         </record>
 
-        <record model="gym.membership" id="membership_demo_1">
-            <field name="member_id" ref="member_demo_1"/>
-            <field name="package_id" ref="package_demo_1"/>
-            <field name="trainer_id" ref="trainer_demo_1"/>
-            <field name="start_date">2026-05-01</field>
-            <field name="end_date">2026-05-31</field>
-            <field name="total_amount">800000.0</field>
-            <field name="payment_status">paid</field>
-            <field name="status">active</field>
+        <record model="gym.package" id="package_demo_year_1">
+            <field name="name">Gói tập Bạc Vàng Đăng Ký 1 Năm</field>
+            <field name="price">8500000.0</field>
+            <field name="duration_days">365</field>
+            <field name="description">Gói siêu tiết kiệm dành cho hội viên trung thành, thời hạn 1 năm trọn gói.</field>
+            <field name="active">True</field>
         </record>
 
-        <record model="gym.membership" id="membership_demo_2">
-            <field name="member_id" ref="member_demo_3"/>
-            <field name="package_id" ref="package_demo_2"/>
-            <field name="trainer_id" ref="trainer_demo_2"/>
-            <field name="start_date">2026-05-20</field>
-            <field name="end_date">2026-07-19</field>
-            <field name="total_amount">1800000.0</field>
-            <field name="payment_status">unpaid</field>
+        <record model="gym.package" id="package_demo_year_2">
+            <field name="name">Gói tập Kim Cương Đăng Ký 2 Năm</field>
+            <field name="price">15000000.0</field>
+            <field name="duration_days">730</field>
+            <field name="description">Gói VIP cao cấp nhất phòng tập với thời hạn 2 năm, tặng kèm bộ quà tặng và khăn tập.</field>
+            <field name="active">True</field>
+        </record>
+
+        <record model="gym.membership" id="membership_demo_1">
+            <field name="member_id" ref="member_demo_1"/>
+            <field name="package_id" ref="package_demo_year_2"/>
+            <field name="trainer_id" ref="trainer_demo_1"/>
+            <field name="start_date">2026-05-01</field>
+            <field name="end_date">2028-04-30</field>
+            <field name="total_amount">15000000.0</field>
+            <field name="payment_status">paid</field>
             <field name="status">active</field>
         </record>
 
         <record model="gym.membership" id="membership_demo_3">
             <field name="member_id" ref="member_demo_2"/>
-            <field name="package_id" ref="package_demo_1"/>
-            <field name="trainer_id" ref="trainer_demo_1"/>
-            <field name="start_date">2026-04-01</field>
-            <field name="end_date">2026-04-30</field>
-            <field name="total_amount">800000.0</field>
-            <field name="payment_status">paid</field>
-            <field name="status">expired</field>
-        </record>
-
-        <record model="gym.membership" id="membership_demo_4">
-            <field name="member_id" ref="member_demo_3"/>
-            <field name="package_id" ref="package_demo_3"/>
+            <field name="package_id" ref="package_demo_year_1"/> 
             <field name="trainer_id" ref="trainer_demo_2"/>
-            <field name="start_date">2026-03-05</field>
-            <field name="end_date">2026-04-04</field>
-            <field name="total_amount">1200000.0</field>
+            <field name="start_date">2026-01-01</field>
+            <field name="end_date">2026-12-31</field>
+            <field name="total_amount">8500000.0</field>
             <field name="payment_status">paid</field>
-            <field name="status">expired</field>
+            <field name="status">active</field>
         </record>
 
         <record model="gym.checkin" id="checkin_demo_1">
@@ -130,7 +125,7 @@
         </record>
 
         <record model="gym.checkin" id="checkin_demo_3">
-            <field name="member_id" ref="member_demo_3"/>
+            <field name="member_id" ref="member_demo_2"/>
             <field name="checkin_time">2026-05-21 10:00:00</field>
             <field name="checkout_time">2026-05-21 11:05:00</field>
         </record>

@@ -85,6 +85,33 @@ class gym_membership(osv.osv):
             })
         return result
 
+    def _check_dates(self, start_date, end_date):
+        if start_date and end_date:
+            start = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+            end = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+            if end < start:
+                raise except_orm(u'Lỗi ngày', u'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.')
+
+    def _is_admin(self, cr, uid, context=None):
+        user_obj = self.pool.get('res.users')
+        return uid == 1 or user_obj.has_group(cr, uid, 'base.group_system', context=context)
+
+    def _validate_status_payment(self, cr, uid, vals, membership=None, context=None):
+        status = vals.get('status') if vals.get('status') is not None else (membership.status if membership else None)
+        payment_status = vals.get('payment_status') if vals.get('payment_status') is not None else (membership.payment_status if membership else None)
+
+        if status == 'canceled' and not self._is_admin(cr, uid, context=context):
+            raise except_orm(u'Lỗi phân quyền', u'Chỉ quản trị viên mới được hủy gói tập.')
+
+        if status == 'expired' and not (context or {}).get('force_expire'):
+            raise except_orm(u'Lỗi trạng thái', u'Không thể thực hiện!.')
+
+        if status == 'active' and payment_status != 'paid':
+            raise except_orm(u'Lỗi trạng thái', u'Gói tập chưa được thanh toán.')
+
+        if payment_status == 'unpaid' and status == 'active':
+            raise except_orm(u'Lỗi trạng thái', u'Gói tập chưa được thanh toán.')
+
     def create(self, cr, uid, vals, context=None):
         if vals.get('member_id'):
             member = self.pool.get('gym.member').browse(cr, uid, vals['member_id'], context=context)
@@ -94,7 +121,50 @@ class gym_membership(osv.osv):
             trainer = self.pool.get('gym.trainer').browse(cr, uid, vals['trainer_id'], context=context)
             if not trainer.active:
                 raise except_orm(u'Lỗi đăng ký gói!', u'Huấn luyện viên đã nghỉ hưu hoặc không còn hoạt động, vui lòng chọn huấn luyện viên khác.')
+        if vals.get('package_id'):
+            package = self.pool.get('gym.package').browse(cr, uid, vals['package_id'], context=context)
+            today = datetime.date.today()
+            if not vals.get('start_date'):
+                vals['start_date'] = today.strftime('%Y-%m-%d')
+            if not vals.get('end_date'):
+                end_date = today + datetime.timedelta(days=(package.duration_days or 0))
+                vals['end_date'] = end_date.strftime('%Y-%m-%d')
+            if not vals.get('total_amount'):
+                vals['total_amount'] = package.price or 0.0
+        self._check_dates(vals.get('start_date'), vals.get('end_date'))
+        self._validate_status_payment(cr, uid, vals, context=context)
         return super(gym_membership, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('package_id'):
+            package = self.pool.get('gym.package').browse(cr, uid, vals['package_id'], context=context)
+            today = datetime.date.today()
+            if not vals.get('start_date'):
+                vals['start_date'] = today.strftime('%Y-%m-%d')
+            if not vals.get('end_date'):
+                end_date = today + datetime.timedelta(days=(package.duration_days or 0))
+                vals['end_date'] = end_date.strftime('%Y-%m-%d')
+            if not vals.get('total_amount'):
+                vals['total_amount'] = package.price or 0.0
+        if vals.get('start_date') or vals.get('end_date'):
+            for membership in self.browse(cr, uid, ids, context=context):
+                start_date = vals.get('start_date') or membership.start_date
+                end_date = vals.get('end_date') or membership.end_date
+                self._check_dates(start_date, end_date)
+        for membership in self.browse(cr, uid, ids, context=context):
+            self._validate_status_payment(cr, uid, vals, membership=membership, context=context)
+        return super(gym_membership, self).write(cr, uid, ids, vals, context=context)
+
+    def cron_expire_memberships(self, cr, uid, context=None):
+        """Cron job: set membership status to 'expired' when end_date is before today."""
+        today = datetime.date.today().strftime('%Y-%m-%d')
+        membership_ids = self.search(cr, uid, [
+            ('status', '=', 'active'),
+            ('end_date', '<', today),
+        ])
+        if membership_ids:
+            self.write(cr, uid, membership_ids, {'status': 'expired'}, context=dict(context or {}, force_expire=True))
+        return True
 
 gym_membership()
 
