@@ -191,8 +191,8 @@ class gym_package(osv.osv):
     _name = 'gym.package'
     _columns = {
         'name': fields.char('Tên gói tập', required=True),
-        'price': fields.float('Giá', digits=(16, 2)),
-        'duration_days': fields.integer('Số ngày'),
+        'price': fields.float('Giá', digits=(16, 2), required=True),
+        'duration_days': fields.integer('Số ngày', required=True),
         'description': fields.text('Mô tả'),
         'membership_ids': fields.one2many('gym.membership', 'package_id', 'Memberships'),
         'active': fields.boolean('Hoạt động'),
@@ -202,9 +202,19 @@ class gym_package(osv.osv):
         'active': True
     }
 
-    _sql_constraints = [
-        ('package_id_unique', 'unique(package_id)', 'Mã gói tập đã tồn tại!')
-    ]
+    def _validate_package_values(self, vals):
+        if 'price' in vals and vals.get('price') is not None and vals['price'] < 0:
+            raise except_orm(u'Lỗi giá', u'Giá gói tập không được phép là số âm.')
+        if 'duration_days' in vals and vals.get('duration_days') is not None and vals['duration_days'] < 0:
+            raise except_orm(u'Lỗi số ngày', u'Số ngày tập không được phép là số âm.')
+
+    def create(self, cr, uid, vals, context=None):
+        self._validate_package_values(vals)
+        return super(gym_package, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self._validate_package_values(vals)
+        return super(gym_package, self).write(cr, uid, ids, vals, context=context)
 
 gym_package()
 
